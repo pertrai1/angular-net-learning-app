@@ -3,12 +3,16 @@
 >
   <div class="card-title justify-center text-3xl text-primary">Sign up</div>
   <div class="card-body w-full">
+    <ul class="steps">
+      <li class="step step-primary">Credentials</li>
+      <li class="step" [class.step-primary]="currentStep() === 2">Profile</li>
+    </ul>
+    @if (currentStep() === 1) {
     <form
-      [formGroup]="registerForm"
-      (ngSubmit)="register()"
-      class="flex flex-col gap-4 w-full"
+      [formGroup]="credentialsForm"
+      class="flex flex-col gap-4 w-full steps"
     >
-      <app-text-input [label]="'Email'" formControlName="email" />
+      <app-text-input [label]="'Email'" formControlName="email" class="mt-2" />
       <app-text-input [label]="'Display name'" formControlName="displayName" />
       <app-text-input
         [label]="'Password'"
@@ -24,16 +28,35 @@
         <button class="btn" type="button" (click)="cancel()">Cancel</button>
         <button
           class="btn btn-primary"
-          type="submit"
-          [disabled]="!registerForm.valid"
+          type="button"
+          (click)="nextStep()"
+          [disabled]="!credentialsForm.valid"
+        >
+          Next
+        </button>
+      </div>
+    </form>
+    } @if (currentStep() === 2) {
+    <form [formGroup]="profileForm" class="flex flex-col w-full gap-4 steps">
+      <div>Profile form goes here</div>
+      <div class="flex items-center justify-end gap-3">
+        <button class="btn" type="button" (click)="prevStep()">Back</button>
+        <button
+          class="btn btn-primary"
+          type="button"
+          (click)="register()"
+          [disabled]="!profileForm.valid"
         >
           Register
         </button>
       </div>
     </form>
+    }
   </div>
   <div class="flex flex-col w-full mockup-code text-lg items-start px-3">
-    <div>Form value: {{ registerForm.value | json }}</div>
-    <div>Form status: {{ registerForm.status | json }}</div>
+    <div>Creds Form value: {{ credentialsForm.value | json }}</div>
+    <div>Creds Form status: {{ credentialsForm.status | json }}</div>
+    <div>Profile Form value: {{ profileForm.value | json }}</div>
+    <div>Profile Form status: {{ profileForm.status | json }}</div>
   </div>
 </div>

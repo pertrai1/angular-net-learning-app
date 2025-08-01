@@ -1,4 +1,4 @@
-import { Component, inject, output } from '@angular/core';
+import { Component, inject, output, signal } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -28,10 +28,12 @@ export class Register {
 
   protected creds = {} as RegisterCreds;
 
-  protected registerForm: FormGroup;
+  protected credentialsForm: FormGroup;
+  protected profileForm: FormGroup;
+  protected currentStep = signal(1);
 
   constructor() {
-    this.registerForm = this.fb.group({
+    this.credentialsForm = this.fb.group({
       email: ['', Validators.required],
       displayName: ['', Validators.required],
       password: [
@@ -44,10 +46,19 @@ export class Register {
       ],
     });
 
-    this.registerForm.controls['password'].valueChanges.subscribe({
+    this.credentialsForm.controls['password'].valueChanges.subscribe({
       next: () => {
-        this.registerForm.controls['confirmPassword'].updateValueAndValidity();
+        this.credentialsForm.controls[
+          'confirmPassword'
+        ].updateValueAndValidity();
       },
+    });
+
+    this.profileForm = this.fb.group({
+      gender: ['', Validators.required],
+      dateOfBirth: ['', Validators.required],
+      city: ['', Validators.required],
+      country: ['', Validators.required],
     });
   }
 
@@ -66,7 +77,13 @@ export class Register {
   }
 
   register() {
-    console.log(this.registerForm.value);
+    if (this.profileForm.valid && this.credentialsForm.valid) {
+      const formData = {
+        ...this.credentialsForm.value,
+        ...this.profileForm.value,
+      };
+      console.log('form data: ', formData);
+    }
     // this.accountService.register(this.creds).subscribe({
     //   next: (response) => {
     //     console.log(response);
@@ -76,6 +93,16 @@ export class Register {
     //     console.error(error);
     // },
     // });
+  }
+
+  nextStep() {
+    if (this.credentialsForm.valid) {
+      this.currentStep.update((prevStep) => prevStep + 1);
+    }
+  }
+
+  prevStep() {
+    this.currentStep.update((prevStep) => prevStep - 1);
   }
 
   cancel() {
