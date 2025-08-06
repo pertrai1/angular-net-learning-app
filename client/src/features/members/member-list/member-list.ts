@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { MemberService } from '../../../core/services/member-service';
-import { Member } from '../../../types/member';
+import { Member, MemberParams } from '../../../types/member';
 import { MemberCard } from '../member-card/member-card';
 import { PaginatedResult } from '../../../types/pagination';
 import { Paginator } from '../../../shared/paginator/paginator';
@@ -15,15 +15,14 @@ export class MemberList implements OnInit {
   private memberService = inject(MemberService);
   protected paginatedMembers = signal<PaginatedResult<Member> | null>(null);
 
-  pageNumber = 1;
-  pageSize = 5;
+  protected memberParams = new MemberParams();
 
   ngOnInit() {
     this.loadMembers();
   }
 
   loadMembers() {
-    this.memberService.getMembers(this.pageNumber, this.pageSize).subscribe({
+    this.memberService.getMembers(this.memberParams).subscribe({
       next: (result) => {
         this.paginatedMembers.set(result);
       },
@@ -31,8 +30,8 @@ export class MemberList implements OnInit {
   }
 
   onPageChange(event: { pageNumber: number; pageSize: number }) {
-    this.pageSize = event.pageSize;
-    this.pageNumber = event.pageNumber;
+    this.memberParams.pageSize = event.pageSize;
+    this.memberParams.pageNumber = event.pageNumber;
     this.loadMembers();
   }
 }
