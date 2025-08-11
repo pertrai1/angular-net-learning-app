@@ -10,7 +10,7 @@
             <input
               type="radio"
               class="btn"
-              [(ngModel)]="memberParams.gender"
+              [(ngModel)]="memberParams().gender"
               aria-label="male"
               name="gender"
               value="male"
@@ -18,7 +18,7 @@
             <input
               type="radio"
               class="btn"
-              [(ngModel)]="memberParams.gender"
+              [(ngModel)]="memberParams().gender"
               aria-label="female"
               name="gender"
               value="female"
@@ -32,15 +32,15 @@
               type="number"
               class="input w-20"
               [min]="18"
-              [(ngModel)]="memberParams.minAge"
+              [(ngModel)]="memberParams().minAge"
               name="minAge"
               (change)="onMinAgeChange()"
             />
             <input
               type="number"
               class="input w-20"
-              [max]="memberParams.minAge || 18"
-              [(ngModel)]="memberParams.maxAge"
+              [max]="memberParams().minAge || 18"
+              [(ngModel)]="memberParams().maxAge"
               name="maxAge"
               (change)="onMaxAgeChange()"
             />
@@ -51,7 +51,7 @@
           <select
             class="select"
             name="orderBy"
-            [(ngModel)]="memberParams.orderBy"
+            [(ngModel)]="memberParams().orderBy"
           >
             <option disabled selected>Order by</option>
             <option value="created">Newest members</option>
